@@ -1,0 +1,133 @@
+# ============================================================
+# 安心药箱 · 用药安全规则引擎规则定义
+# 版本: 1.0.0
+# 说明: 每条规则可被规则引擎确定性执行，输出可追溯至规则ID
+# ============================================================
+
+version: "1.0.0"
+
+rules:
+  # ============================================================
+  # 一、重复有效成分（自动扫描所有药对，检测共享成分）
+  # ============================================================
+  - id: R-DUP-001
+    type: 重复有效成分
+    check_type: shared_ingredient
+    level: red
+    description: "{drug_a}与{drug_b}均含有效成分「{ingredient}」，同服相当于加倍剂量"
+    basis: 两药均含同一有效成分，说明书注意事项
+    advice: 请停用其中一种，并咨询医生或药师确认用药方案
+
+  # ============================================================
+  # 二、药物相互作用（显式药物组对）
+  # ============================================================
+  - id: R-INT-001
+    type: 药物相互作用
+    check_type: group_pair
+    level: red
+    group_a: ["华法林"]
+    group_b: ["阿司匹林"]
+    description: "{drug_a}与{drug_b}联用显著增加出血风险"
+    basis: 说明书药物相互作用项
+    advice: 请立即咨询医生，评估抗凝/抗血小板方案
+
+  - id: R-INT-002
+    type: 药物相互作用
+    check_type: group_pair
+    level: red
+    group_a: ["华法林"]
+    group_b: ["布洛芬", "双氯芬酸", "萘普生"]
+    description: "{drug_a}与{drug_b}联用增加消化道出血风险"
+    basis: 说明书药物相互作用项
+    advice: 请咨询医生，可考虑换用对乙酰氨基酚替代NSAID
+
+  - id: R-INT-003
+    type: 药物相互作用
+    check_type: group_pair
+    level: red
+    group_a: ["华法林"]
+    group_b: ["胺碘酮"]
+    description: "{drug_b}可升高{drug_a}血药浓度，增加出血风险"
+    basis: 说明书药物相互作用项
+    advice: 请立即咨询医生，监测INR并调整华法林剂量
+
+  - id: R-INT-004
+    type: 药物相互作用
+    check_type: group_pair
+    level: red
+    group_a: ["卡托普利", "依那普利", "培哚普利", "缬沙坦", "氯沙坦", "厄贝沙坦", "替米沙坦"]
+    group_b: ["螺内酯"]
+    description: "{drug_a}与{drug_b}联用可致高钾血症"
+    basis: 说明书药物相互作用项
+    advice: 请咨询医生，监测血钾水平
+
+  - id: R-INT-005
+    type: 药物相互作用
+    check_type: group_pair
+    level: red
+    group_a: ["卡托普利", "依那普利", "培哚普利", "缬沙坦", "氯沙坦", "厄贝沙坦", "替米沙坦"]
+    group_b: ["氯化钾", "氯化钾缓释片"]
+    description: "{drug_a}与{drug_b}联用可致高钾血症"
+    basis: 说明书药物相互作用项
+    advice: 请咨询医生，监测血钾水平
+
+  - id: R-INT-006
+    type: 药物相互作用
+    check_type: group_pair
+    level: yellow
+    group_a: ["辛伐他汀", "阿托伐他汀", "瑞舒伐他汀"]
+    group_b: ["非诺贝特", "吉非贝齐"]
+    description: "{drug_a}与{drug_b}联用增加横纹肌溶解风险"
+    basis: 说明书药物相互作用项
+    advice: 请告知医生，必要时监测肌酸激酶
+
+  - id: R-INT-007
+    type: 药物相互作用
+    check_type: group_pair
+    level: red
+    group_a: ["二甲双胍"]
+    group_b: ["碘海醇", "碘普罗胺", "碘克沙醇"]
+    description: "{drug_a}与含碘造影剂联用可致乳酸酸中毒"
+    basis: 说明书药物相互作用项
+    advice: 检查前后48小时暂停二甲双胍，并咨询医生
+
+  - id: R-INT-008
+    type: 药物相互作用
+    check_type: group_pair
+    level: yellow
+    group_a: ["卡马西平"]
+    group_b: ["红霉素", "克拉霉素"]
+    description: "{drug_b}可升高{drug_a}血药浓度"
+    basis: 说明书药物相互作用项
+    advice: 请告知医生，监测卡马西平血药浓度
+
+  # ============================================================
+  # 三、慢病禁忌（基于药品库 contraindicated_for 字段匹配）
+  # ============================================================
+  - id: R-CHR-001
+    type: 慢病禁忌
+    check_type: chronic_contraindication
+    level: red
+    description: "{drug}禁用于{condition}患者"
+    basis: 说明书禁忌项
+    advice: 请告知医生您的{condition}病史，由医生评估替代方案
+
+  # ============================================================
+  # 四、效期检测
+  # ============================================================
+  - id: R-EXP-001
+    type: 效期
+    check_type: expired
+    level: red
+    description: "{drug}已过有效期（{expiry_date}），药效可能降低或产生有害变化"
+    basis: 药品有效期管理规定
+    advice: 请立即停止使用，按药品说明妥善处理并补充新药
+
+  - id: R-EXP-002
+    type: 效期
+    check_type: near_expiry
+    threshold_days: 30
+    level: yellow
+    description: "{drug}将于{expiry_date}到期，请在有效期内尽快使用"
+    basis: 药品有效期管理规定
+    advice: 标注到期日期优先使用，到期后及时补充新药
