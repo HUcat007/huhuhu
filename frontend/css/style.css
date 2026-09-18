@@ -1,0 +1,257 @@
+/* ===== 安心药箱 · 医院白色风 主题 ===== */
+:root {
+  --bg: #f4f8fb;
+  --card: #ffffff;
+  --card-soft: #f8fafc;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --txt: #0f172a;
+  --sub: #475569;
+  --muted: #94a3b8;
+  --teal: #0d9488;
+  --teal-deep: #0f766e;
+  --blue: #2563eb;
+  --blue-deep: #1d4ed8;
+  --violet: #7c3aed;
+  --emerald: #059669;
+  --amber: #d97706;
+  --red: #e11d48;
+  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 4px 16px rgba(15,23,42,.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+
+body {
+  background:
+    radial-gradient(1000px 420px at 12% -8%, rgba(13,148,136,.06), transparent 60%),
+    radial-gradient(900px 500px at 92% -4%, rgba(37,99,235,.06), transparent 55%),
+    var(--bg);
+  color: var(--txt);
+  min-height: 100vh;
+}
+
+/* ===== 顶部导航 ===== */
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo { font-size: 32px; }
+.brand h1 { font-size: 20px; font-weight: 800; color: #0f3d4c; }
+.brand p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+.tabs { display: flex; gap: 4px; flex: 1; justify-content: center; }
+.tab {
+  padding: 10px 20px; border: none; background: transparent;
+  font-size: 15px; color: var(--sub); cursor: pointer; border-radius: 10px;
+  font-weight: 600; transition: all .2s;
+}
+.tab:hover { background: var(--card-soft); color: var(--txt); }
+.tab.active { background: linear-gradient(135deg, var(--teal), var(--blue)); color: #fff; }
+
+.mode-switch { display: flex; gap: 4px; background: var(--card-soft); padding: 4px; border-radius: 12px; }
+.mode-btn {
+  padding: 8px 16px; border: none; background: transparent;
+  font-size: 13px; cursor: pointer; border-radius: 8px; font-weight: 600; color: var(--sub);
+}
+.mode-btn.active { background: var(--card); color: var(--teal-deep); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+
+/* ===== 容器 ===== */
+.container { max-width: 1200px; margin: 0 auto; padding: 28px 32px 80px; }
+
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.panel-header { margin-bottom: 24px; }
+.panel-header h2 { font-size: 24px; font-weight: 800; color: #0f3d4c; margin-bottom: 6px; }
+.panel-desc { font-size: 14px; color: var(--sub); line-height: 1.7; }
+.principle-note { display: inline-block; margin-top: 6px; background: #fffbeb; color: #92400e; padding: 4px 12px; border-radius: 6px; font-size: 12px; }
+
+/* ===== 按钮 ===== */
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #fff; border: none; padding: 12px 28px; border-radius: 12px;
+  font-size: 15px; font-weight: 700; cursor: pointer; transition: transform .1s, box-shadow .2s;
+  box-shadow: 0 4px 12px rgba(13,148,136,.25);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(13,148,136,.35); }
+.btn-primary:active { transform: translateY(0); }
+.btn-lg { padding: 16px 40px; font-size: 17px; }
+.btn-secondary {
+  background: var(--card); color: var(--sub); border: 1px solid var(--line-strong);
+  padding: 12px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.btn-secondary:hover { background: var(--card-soft); }
+.btn-danger { background: #fff1f2; color: var(--red); border: 1px solid #fecdd3; padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-weight: 600; }
+
+/* ===== 模块1：识药 ===== */
+.identify-area { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.upload-box {
+  border: 2px dashed #99f6e4; border-radius: 20px; padding: 60px 40px;
+  text-align: center; background: var(--card); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 12px; transition: border-color .2s;
+}
+.upload-box:hover { border-color: var(--teal); }
+.upload-icon { font-size: 64px; }
+.upload-text { font-size: 18px; font-weight: 700; color: var(--txt); }
+.upload-hint { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+
+.identify-result {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  padding: 24px; box-shadow: var(--shadow);
+}
+.result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.result-header h3 { font-size: 18px; font-weight: 800; }
+.result-count { font-size: 13px; color: var(--teal-deep); background: #f0fdfa; padding: 4px 12px; border-radius: 999px; font-weight: 600; }
+.result-list { display: flex; flex-direction: column; gap: 10px; max-height: 340px; overflow-y: auto; }
+.result-item {
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center; background: var(--card-soft);
+}
+.result-item .rname { font-size: 16px; font-weight: 700; color: var(--txt); }
+.result-item .rcat { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.result-item .rmeta { font-size: 12px; color: var(--sub); margin-top: 4px; }
+.confidence { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+.conf-high { color: var(--emerald); background: #ecfdf5; }
+.conf-mid { color: var(--amber); background: #fffbeb; }
+.result-actions { display: flex; gap: 12px; margin-top: 16px; }
+
+/* ===== 模块2：药箱 ===== */
+.cabinet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.med-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 18px 20px; box-shadow: var(--shadow); position: relative;
+}
+.med-card .mc-name { font-size: 17px; font-weight: 800; color: var(--txt); }
+.med-card .mc-cat { font-size: 12px; color: var(--teal-deep); background: #f0fdfa; display: inline-block; padding: 2px 10px; border-radius: 999px; margin-top: 6px; font-weight: 600; }
+.med-card .mc-ing { font-size: 13px; color: var(--sub); margin-top: 10px; line-height: 1.6; }
+.med-card .mc-expiry { font-size: 13px; margin-top: 10px; font-weight: 600; }
+.mc-expiry.ok { color: var(--emerald); }
+.mc-expiry.warn { color: var(--amber); }
+.mc-expiry.danger { color: var(--red); }
+.med-card .mc-remove { position: absolute; top: 12px; right: 12px; }
+.empty-state { grid-column: 1/-1; text-align: center; padding: 60px; color: var(--muted); font-size: 16px; }
+
+.chronic-box { margin-top: 14px; display: flex; align-items: center; gap: 12px; }
+.chronic-box label { font-size: 14px; font-weight: 600; color: var(--sub); }
+.chronic-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.chronic-tag {
+  padding: 6px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--line); background: var(--card-soft); color: var(--sub);
+}
+.chronic-tag.active { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+
+/* ===== 模块3：风险检测 ===== */
+.risk-overview {
+  display: flex; align-items: center; gap: 24px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 24px 32px; margin-bottom: 20px; box-shadow: var(--shadow);
+}
+.risk-score {
+  width: 80px; height: 80px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 28px; font-weight: 900; color: #fff; flex-shrink: 0;
+}
+.risk-score.red { background: var(--red); }
+.risk-score.yellow { background: var(--amber); }
+.risk-score.green { background: var(--emerald); }
+.risk-score.gray { background: var(--muted); }
+.risk-summary { flex: 1; }
+.risk-summary .rs-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.risk-summary .rs-stats { font-size: 14px; color: var(--sub); }
+
+.risk-list { margin-top: 20px; display: flex; flex-direction: column; gap: 14px; }
+.risk-card {
+  border-radius: 14px; padding: 18px 22px; border-left: 5px solid; background: var(--card);
+  box-shadow: var(--shadow);
+}
+.risk-card.red { border-left-color: var(--red); background: #fff1f2; }
+.risk-card.yellow { border-left-color: var(--amber); background: #fffbeb; }
+.risk-card.green { border-left-color: var(--emerald); background: #f0fdf4; }
+.risk-card .rc-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.risk-card.red .rc-title { color: var(--red); }
+.risk-card.yellow .rc-title { color: var(--amber); }
+.risk-card.green .rc-title { color: var(--emerald); }
+.risk-card .rc-what { font-size: 14px; color: var(--txt); line-height: 1.7; margin-bottom: 6px; }
+.risk-card .rc-why { font-size: 13px; color: var(--sub); line-height: 1.7; margin-bottom: 6px; }
+.risk-card .rc-suggest { font-size: 13px; color: var(--teal-deep); line-height: 1.7; font-weight: 600; }
+.risk-level-badge { font-size: 12px; padding: 3px 10px; border-radius: 999px; font-weight: 700; }
+.risk-level-badge.red { background: var(--red); color: #fff; }
+.risk-level-badge.yellow { background: var(--amber); color: #fff; }
+
+/* ===== 模块4：服药计划 ===== */
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 20px; }
+.plan-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 22px; box-shadow: var(--shadow);
+}
+.plan-card .pc-period { font-size: 18px; font-weight: 800; color: var(--txt); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.plan-card .pc-period .emoji { font-size: 22px; }
+.plan-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid var(--line);
+}
+.plan-item:last-child { border-bottom: none; }
+.plan-item .pi-name { font-size: 15px; font-weight: 600; }
+.plan-item .pi-usage { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.take-btn {
+  background: var(--emerald); color: #fff; border: none; padding: 8px 16px;
+  border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.take-btn.done { background: #e2e8f0; color: var(--muted); cursor: default; }
+
+/* ===== 模块5：家庭联防 ===== */
+.family-report { margin-top: 20px; }
+.report-header {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 20px;
+}
+.report-header h3 { font-size: 22px; margin-bottom: 6px; }
+.report-header p { font-size: 14px; opacity: .9; }
+.report-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.stat-box {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 18px; text-align: center; box-shadow: var(--shadow);
+}
+.stat-box .num { font-size: 32px; font-weight: 900; }
+.stat-box .label { font-size: 13px; color: var(--sub); margin-top: 4px; }
+
+.report-section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.report-section h4 { font-size: 16px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+/* ===== 老人端模式 ===== */
+body.elderly-mode .tab { font-size: 18px; padding: 14px 24px; }
+body.elderly-mode .panel-header h2 { font-size: 28px; }
+body.elderly-mode .panel-desc { font-size: 17px; }
+body.elderly-mode .btn-primary { font-size: 18px; padding: 16px 36px; }
+body.elderly-mode .med-card .mc-name { font-size: 20px; }
+body.elderly-mode .result-item .rname { font-size: 19px; }
+body.elderly-mode .plan-card .pc-period { font-size: 22px; }
+body.elderly-mode .plan-item .pi-name { font-size: 18px; }
+body.elderly-mode .take-btn { font-size: 16px; padding: 12px 24px; }
+
+.elderly-toast {
+  position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+  background: var(--teal-deep); color: #fff; padding: 16px 32px; border-radius: 14px;
+  font-size: 18px; font-weight: 600; z-index: 999; box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  animation: toastIn .3s ease;
+}
+@keyframes toastIn { from { opacity: 0; transform: translate(-50%, 20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* ===== 底部 ===== */
+.footer { text-align: center; padding: 24px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+  .identify-area { grid-template-columns: 1fr; }
+  .topbar { flex-wrap: wrap; }
+  .tabs { order: 3; width: 100%; overflow-x: auto; }
+}
