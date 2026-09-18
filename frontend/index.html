@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安心药箱 · 家庭用药安全辅助系统</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">💊</span>
+    <div>
+      <h1>安心药箱</h1>
+      <p>家庭用药安全辅助系统</p>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="identify">一拍识药</button>
+    <button class="tab" data-tab="cabinet">家庭药箱</button>
+    <button class="tab" data-tab="risk">风险检测</button>
+    <button class="tab" data-tab="plan">服药助手</button>
+    <button class="tab" data-tab="family">家庭联防</button>
+  </nav>
+  <div class="mode-switch">
+    <button class="mode-btn active" data-mode="elderly">👴 老人端</button>
+    <button class="mode-btn" data-mode="family">👨‍👩‍👧 子女端</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ========== 模块1：一拍识药 ========== -->
+  <section class="panel active" id="panel-identify">
+    <div class="panel-header">
+      <h2>① AI 一拍识药</h2>
+      <p class="panel-desc">把药盒摆在桌面，拍照即可自动识别药品名称、规格与有效期</p>
+    </div>
+    <div class="identify-area">
+      <div class="upload-box" id="uploadBox">
+        <div class="upload-icon">📷</div>
+        <p class="upload-text">点击拍照 / 上传药盒图片</p>
+        <p class="upload-hint">支持多药同框 · OCR + 多模态视觉识别</p>
+        <button class="btn-primary btn-lg" id="btnScan">开 始 识 别</button>
+      </div>
+      <div class="identify-result" id="identifyResult" style="display:none;">
+        <div class="result-header">
+          <h3>识别结果</h3>
+          <span class="result-count" id="resultCount"></span>
+        </div>
+        <div class="result-list" id="resultList"></div>
+        <div class="result-actions">
+          <button class="btn-secondary" id="btnRescan">重新识别</button>
+          <button class="btn-primary" id="btnAddAll">全部加入药箱</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 模块2：家庭药箱 ========== -->
+  <section class="panel" id="panel-cabinet">
+    <div class="panel-header">
+      <h2>家庭药箱</h2>
+      <p class="panel-desc">管理家庭常备药品，自动追踪有效期</p>
+      <div class="chronic-box">
+        <label>慢病管理：</label>
+        <div class="chronic-tags" id="chronicTags"></div>
+      </div>
+    </div>
+    <div class="cabinet-grid" id="cabinetGrid">
+      <div class="empty-state">药箱为空，请先「一拍识药」添加药品</div>
+    </div>
+  </section>
+
+  <!-- ========== 模块3：风险检测 ========== -->
+  <section class="panel" id="panel-risk">
+    <div class="panel-header">
+      <h2>② 用药安全风险引擎</h2>
+      <p class="panel-desc">规则引擎检测：重复成分 · 联合禁忌 · 慢病禁忌 · 效期风险<br>
+        <span class="principle-note">⚠ 核心原则：大模型不参与最终安全判断，识别归模型、判断归规则、解释归 LLM</span>
+      </p>
+    </div>
+    <div class="risk-overview" id="riskOverview">
+      <div class="risk-score" id="riskScore">—</div>
+      <div class="risk-summary" id="riskSummary">点击下方按钮开始检测</div>
+    </div>
+    <button class="btn-primary btn-lg" id="btnRiskCheck">🔍 开始风险检测</button>
+    <div class="risk-list" id="riskList"></div>
+  </section>
+
+  <!-- ========== 模块4：服药助手 ========== -->
+  <section class="panel" id="panel-plan">
+    <div class="panel-header">
+      <h2>③ 老人友好服药助手</h2>
+      <p class="panel-desc">大字体 · 语音提醒 · 一键打卡，老人 4 步上手</p>
+    </div>
+    <button class="btn-primary" id="btnLoadPlan">生成今日服药计划</button>
+    <div class="plan-grid" id="planGrid"></div>
+  </section>
+
+  <!-- ========== 模块5：家庭联防 ========== -->
+  <section class="panel" id="panel-family">
+    <div class="panel-header">
+      <h2>④ 家庭联防中心</h2>
+      <p class="panel-desc">子女远程守护：一页式报告，风险、漏服、效期全知晓</p>
+    </div>
+    <button class="btn-primary" id="btnFamilyReport">生成家庭报告</button>
+    <div class="family-report" id="familyReport"></div>
+  </section>
+
+</main>
+
+<!-- 老人端大字体遮罩提示 -->
+<div class="elderly-toast" id="elderlyToast" style="display:none;"></div>
+
+<footer class="footer">
+  <p>安心药箱 · 第八届AIC算法创新赛道 · AI+场景创新 | 系统仅提供药品信息整理与风险提示，不替代医生诊断</p>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
