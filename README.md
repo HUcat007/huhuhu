@@ -10,57 +10,60 @@
 
 ## 快速启动
 
-### 方式一：一键启动（推荐）
-
-双击 `run.bat`，自动安装依赖、预置演示数据、启动后端并打开前端。
-
-### 方式二：手动启动
-
 ```bash
 # 1. 安装依赖
-pip install flask flask-cors
+pip install -r requirements.txt
 
-# 2. 预置演示数据（可选）
-cd backend
-python demo_data.py
+# 2. 初始化数据库（生成 data/drugbox.sqlite3，灌入 100 种药品种子数据）
+python -m src.seed_data
 
-# 3. 启动后端
-python app.py
-
-# 4. 打开前端
-# 浏览器打开 frontend/index.html
+# 3. 运行测试（22 项单元测试 + 端到端冒烟）
+python -m pytest tests/ -v
 ```
+
+> 数据库文件 `data/drugbox.sqlite3` 不随仓库分发，需本地执行 `python -m src.seed_data` 生成。
 
 ## 项目结构
 
 ```
-API比赛/
-├── run.bat                    # 一键启动脚本
-├── generate_ppt.py            # 答辩PPT生成脚本
-├── backend/
-│   ├── app.py                 # Flask 后端服务（API接口）
-│   ├── medicine_db.py         # 药品结构化数据库（33种常用药）
-│   ├── risk_engine.py         # 用药安全风险引擎（规则引擎）
-│   ├── demo_data.py           # 演示数据预置脚本
-│   └── data/                  # 运行时数据（药箱、记录、慢病）
+├── requirements.txt            # 依赖（pyyaml）
+├── data/
+│   └── rules.yaml              # 11 条用药安全规则（YAML 版本化）
+├── src/
+│   ├── __init__.py
+│   ├── models.py               # 数据模型（Drug/CabinetEntry/PatientProfile/RiskFinding）
+│   ├── db.py                   # SQLite 数据库操作层
+│   ├── rule_engine.py          # 确定性规则引擎（5 种检查类型）
+│   └── seed_data.py            # 100 种常见慢病药品种子数据
+├── tests/
+│   ├── __init__.py
+│   └── test_rule_engine.py     # 22 项测试（含端到端冒烟）
 ├── frontend/
-│   ├── index.html             # 前端主页面
-│   ├── css/style.css          # 医院白色风样式
-│   └── js/app.js              # 前端交互逻辑
-├── docs/
-│   └── 项目申报书.md          # 完整项目申报书
-├── 安心药箱-答辩PPT.pptx       # 答辩演示文稿（12页）
-├── mvp-architecture.html      # MVP架构图
-└── 安心药箱-MVP架构图.pptx     # 架构图PPT
+│   ├── index.html              # 五模块 H5 页面骨架
+│   ├── css/style.css           # 医院白色风样式（含老人端大字体模式）
+│   └── js/app.js               # 前端交互逻辑
+└── mvp-architecture.html       # 自包含 MVP 架构图（可浏览器直接打开）
 ```
 
-## 演示流程
+## 规则引擎
 
-1. **一拍识药**：点击"开始识别" → 模拟 AI 返回药品列表（含置信度、有效期）
-2. **加入药箱**：点击"全部加入药箱" → 药品进入家庭药箱档案
-3. **风险检测**：点击"开始风险检测" → 查看红/黄/绿风险及"是什么·为什么·建议"三要素解释
-4. **服药助手**：点击"生成今日服药计划" → 早/中/晚分时段计划，老人一键"已服用"打卡
-5. **家庭联防**：点击"生成家庭报告" → 一页式报告，含药品种数、风险等级、依从率
+规则引擎采用 **纯确定性设计**，每条检出可追溯至规则 ID 和依据出处，YAML 配置实现版本化管理（无需改代码即可增改规则）。
+
+### 5 种检查类型
+
+| check_type | 说明 | 规则 ID |
+|------------|------|---------|
+| shared_ingredient | 重复有效成分检测（含复方交叉） | R-DUP-001 |
+| group_pair | 药物相互作用检测（显式组对 + 组匹配） | R-INT-001~008 |
+| chronic_contraindication | 慢病用药禁忌检测 | R-CHR-001 |
+| expired | 过期药品检测 | R-EXP-001 |
+| near_expiry | 近效期药品检测（≤30 天） | R-EXP-002 |
+
+### 风险等级
+
+- 🔴 **红色**：高风险（重复成分、联合禁忌、慢病禁忌、过期）
+- 🟡 **黄色**：需关注（近效期）
+- 🟢 **绿色**：提示
 
 ## 演示亮点
 
@@ -68,22 +71,23 @@ API比赛/
 |------|------|----------|
 | 重复成分 | 同时含"复方氨酚烷胺"和"对乙酰氨基酚片" | 🔴 红色高风险 |
 | 联合禁忌 | 同时含"阿司匹林"和"华法林" | 🔴 红色高风险 |
-| 慢病禁忌 | 设置"高血压"后添加"布洛芬" | 🟡 黄色警示 |
+| 慢病禁忌 | 哮喘患者使用"美托洛尔" | 🔴 红色高风险 |
 | 效期检测 | 添加近效期药品（≤30天） | 🟡 黄色提醒 |
 
-## 风险引擎规则
+## 端到端冒烟测试
 
-1. **重复有效成分检测**：识别含相同有效成分的药品组合
-2. **药品相互作用检测**：基于药品知识库的联合禁忌规则
-3. **慢病用药禁忌检测**：根据患者慢病史匹配用药禁忌
-4. **过期/近效期检测**：自动检测药品有效期
+模拟 70 岁老人药箱（高血压 + 糖尿病 + 冠心病 + 感冒），8 种药品检出 4 条风险。
+
+```bash
+python -m pytest tests/ -v
+```
 
 ## 技术栈
 
-- **后端**：Python 3 + Flask
+- **后端**：Python 3 + SQLite
+- **规则引擎**：YAML 配置 + 纯 Python 确定性判断
 - **前端**：HTML5 + CSS3 + JavaScript（原生 H5）
-- **核心引擎**：自研规则引擎（基于药品成分与禁忌知识库）
-- **数据存储**：JSON 文件（MVP 阶段，可扩展为 SQLite/MySQL）
+- **测试**：unittest + pytest
 
 ## 合规声明
 
